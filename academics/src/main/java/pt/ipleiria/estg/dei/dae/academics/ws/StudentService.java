@@ -3,6 +3,7 @@ package pt.ipleiria.estg.dei.dae.academics.ws;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import pt.ipleiria.estg.dei.dae.academics.dtos.StudentDTO;
+import pt.ipleiria.estg.dei.dae.academics.dtos.SubjectDTO;
 import pt.ipleiria.estg.dei.dae.academics.ejbs.StudentBean;
 
 import jakarta.ejb.EJB;
@@ -57,6 +58,20 @@ public class StudentService{
         return Response.status(Response.Status.CREATED)
                 .entity(StudentDTO.from(newStudent))
                 .build();
+    }
+
+    @GET
+    @Path("{username}")
+    public Response getStudent(@PathParam("username") String username) {
+        var student = studentBean.find(username);
+        return Response.ok(StudentDTO.from(student)).build();
+    }
+
+    @GET
+    @Path("{username}/subjects")
+    public Response getStudentSubjects(@PathParam("username") String username) {
+        var student = studentBean.findWithSubjects(username);
+        return Response.ok(SubjectDTO.from(student.getSubjects())).build();
     }
 
 }

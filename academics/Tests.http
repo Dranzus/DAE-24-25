@@ -26,3 +26,11 @@ Content-Type: application/json
   "name": "Computer Science",
   "code": 4
 }
+
+### Get student details
+GET http://localhost:8080/academics/api/students/dranzus
+Accept: application/json
+
+### Get student subjects
+GET http://localhost:8080/academics/api/students/dranzus/subjects
+Accept: application/json
