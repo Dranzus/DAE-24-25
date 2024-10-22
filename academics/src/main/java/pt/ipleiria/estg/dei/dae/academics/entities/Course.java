@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "courses", uniqueConstraints = {
         @UniqueConstraint(columnNames = "code")
 })
-public class Course implements Serializable {
+public class Course extends Versionable implements Serializable {
     @Id
     private long code;
     private String name;
@@ -26,6 +26,8 @@ public class Course implements Serializable {
     private List<Student> students;
     @OneToMany(mappedBy = "course")
     private List<Subject> subjects;
+    @Version
+    private int version;
 
     public Course() {
         this.students = new ArrayList<>();

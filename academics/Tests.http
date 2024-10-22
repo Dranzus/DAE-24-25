@@ -7,10 +7,10 @@ POST http://localhost:8080/academics/api/students
 Content-Type: application/json
 
 {
- "email": "johndoe@mail.com",
- "name": "John Doe",
- "username": "john",
- "password": "jd",
+ "email": "joao@mail.com",
+ "name": "Joao Vieira",
+ "username": "dranzus",
+ "password": "1234",
  "courseCode": 1
 }
 
@@ -34,3 +34,15 @@ Accept: application/json
 ### Get student subjects
 GET http://localhost:8080/academics/api/students/dranzus/subjects
 Accept: application/json
+
+### Update Student
+PUT http://localhost:8080/academics/api/students/dranzus
+Content-Type: application/json
+
+{
+  "email": "joao@mail.pt",
+  "name": "Joao Vieira",
+  "username": "dranzus",
+  "password": "1234",
+  "courseCode": 1
+}

@@ -9,6 +9,9 @@ import pt.ipleiria.estg.dei.dae.academics.ejbs.StudentBean;
 import jakarta.ejb.EJB;
 import jakarta.ws.rs.core.MediaType;
 import pt.ipleiria.estg.dei.dae.academics.entities.Student;
+import pt.ipleiria.estg.dei.dae.academics.exceptions.MyConstraintViolationException;
+import pt.ipleiria.estg.dei.dae.academics.exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.dae.academics.exceptions.MyEntityNotFoundException;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,8 +47,8 @@ public class StudentService{
 
     @POST
     @Path("/")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response createNewStudent (StudentDTO studentDTO){
+    public Response create(StudentDTO studentDTO)
+            throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException {
         studentBean.create(
                 studentDTO.getUsername(),
                 studentDTO.getPassword(),
@@ -53,18 +56,18 @@ public class StudentService{
                 studentDTO.getEmail(),
                 studentDTO.getCourseCode()
         );
-
-        Student newStudent = studentBean.find(studentDTO.getUsername());
-        return Response.status(Response.Status.CREATED)
-                .entity(StudentDTO.from(newStudent))
-                .build();
+        Student student = studentBean.find(studentDTO.getUsername());
+        return Response.status(Response.Status.CREATED).entity(StudentDTO.from
+                (student)).build();
     }
 
     @GET
     @Path("{username}")
     public Response getStudent(@PathParam("username") String username) {
-        var student = studentBean.find(username);
-        return Response.ok(StudentDTO.from(student)).build();
+        var student = studentBean.findWithSubjects(username);
+        var studentDTO = StudentDTO.from(student);
+        studentDTO.setSubjects(SubjectDTO.from(student.getSubjects()));
+        return Response.ok(studentDTO).build();
     }
 
     @GET
@@ -74,4 +77,11 @@ public class StudentService{
         return Response.ok(SubjectDTO.from(student.getSubjects())).build();
     }
 
+    @PUT
+    @Path("{username}")
+    public Response updateStudent(@PathParam("username") String username, StudentDTO studentDTO) {
+        studentBean.update(username, studentDTO.getPassword(), studentDTO.getName(), studentDTO.getEmail(), studentDTO.getCourseCode());
+        var student = studentBean.find(username);
+        return Response.ok(StudentDTO.from(student)).build();
+    }
 }

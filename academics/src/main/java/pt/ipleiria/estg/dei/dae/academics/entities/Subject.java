@@ -21,7 +21,7 @@ import java.util.List;
         }
 )
 @Entity
-public class Subject implements Serializable {
+public class Subject extends Versionable implements Serializable {
 
     @Id
     private long code;

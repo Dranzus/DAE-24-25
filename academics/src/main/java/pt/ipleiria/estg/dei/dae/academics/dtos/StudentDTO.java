@@ -2,6 +2,7 @@ package pt.ipleiria.estg.dei.dae.academics.dtos;
 
 import pt.ipleiria.estg.dei.dae.academics.entities.Student;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,8 +13,10 @@ public class StudentDTO {
     private String email;
     private long courseCode;
     private String courseName;
+    private List<SubjectDTO> subjects;
 
     public StudentDTO() {
+        this.subjects = new ArrayList<>();
     }
 
     public StudentDTO(String username, String password, String name, String email, long courseCode, String courseName) {
@@ -23,6 +26,7 @@ public class StudentDTO {
         this.email = email;
         this.courseCode = courseCode;
         this.courseName = courseName;
+        this.subjects = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -87,5 +91,13 @@ public class StudentDTO {
     // converts an entire list of entities into a list of DTOs
     public static List<StudentDTO> from(List<Student> students) {
         return students.stream().map(StudentDTO::from).collect(Collectors.toList());
+    }
+
+    public List<SubjectDTO> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<SubjectDTO> subjects) {
+        this.subjects = subjects;
     }
 }
