@@ -46,3 +46,12 @@ Content-Type: application/json
   "password": "1234",
   "courseCode": 1
 }
+
+### Send Email
+POST http://localhost:8080/academics/api/students/dranzus/email
+Content-Type: application/json
+
+{
+    "subject": "Test",
+    "body": "Hello World"
+}

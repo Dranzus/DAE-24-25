@@ -9,6 +9,9 @@
   </div>
   <h2>Error messages:</h2>
   {{ messages }}
+  <nuxt-link :to="`/students/${student.username}/send-email`">
+    <button>Send Email</button>
+  </nuxt-link>
 </template>
 
 <script setup>

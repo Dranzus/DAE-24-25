@@ -1,9 +1,12 @@
 package pt.ipleiria.estg.dei.dae.academics.ws;
 
+import jakarta.mail.MessagingException;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
+import pt.ipleiria.estg.dei.dae.academics.dtos.EmailDTO;
 import pt.ipleiria.estg.dei.dae.academics.dtos.StudentDTO;
 import pt.ipleiria.estg.dei.dae.academics.dtos.SubjectDTO;
+import pt.ipleiria.estg.dei.dae.academics.ejbs.EmailBean;
 import pt.ipleiria.estg.dei.dae.academics.ejbs.StudentBean;
 
 import jakarta.ejb.EJB;
@@ -23,6 +26,8 @@ import java.util.stream.Collectors;
 public class StudentService{
     @EJB
     private StudentBean studentBean;
+    @EJB
+    private EmailBean emailBean;
 
     private StudentDTO toDTO(Student student){
         return new StudentDTO(
@@ -83,5 +88,14 @@ public class StudentService{
         studentBean.update(username, studentDTO.getPassword(), studentDTO.getName(), studentDTO.getEmail(), studentDTO.getCourseCode());
         var student = studentBean.find(username);
         return Response.ok(StudentDTO.from(student)).build();
+    }
+
+    @POST
+    @Path("/{username}/email")
+    public Response sendEmail(@PathParam("username") String username, EmailDTO email)
+            throws MyEntityNotFoundException, MessagingException {
+        Student student = studentBean.find(username);
+        emailBean.send(student.getEmail(), email.getSubject(), email.getBody());
+        return Response.status(Response.Status.OK).entity("E-mail sent").build();
     }
 }
