@@ -14,6 +14,7 @@ import pt.ipleiria.estg.dei.dae.academics.entities.Subject;
 import pt.ipleiria.estg.dei.dae.academics.exceptions.MyConstraintViolationException;
 import pt.ipleiria.estg.dei.dae.academics.exceptions.MyEntityExistsException;
 import pt.ipleiria.estg.dei.dae.academics.exceptions.MyEntityNotFoundException;
+import pt.ipleiria.estg.dei.dae.academics.security.Hasher;
 
 import java.util.List;
 
@@ -24,6 +25,8 @@ public class StudentBean {
 
     @EJB
     CourseBean courseBean = new CourseBean();
+
+    private Hasher hasher = new Hasher();
 
     public void create(String username, String password, String name, String email, long courseCode) throws MyEntityExistsException, MyEntityNotFoundException, MyConstraintViolationException {
         if(exists(username)){
@@ -36,7 +39,7 @@ public class StudentBean {
         }
 
         try {
-            var student = new Student(username, password, name, email, course);
+            var student = new Student(username, hasher.hash(password), name, email, course);
             course.addStudent(student);
             em.persist(student);
             em.flush();
@@ -53,7 +56,7 @@ public class StudentBean {
             return;
         }
         em.lock(student, LockModeType.OPTIMISTIC);
-        student.setPassword(password);
+        student.setPassword(hasher.hash(password));
         student.setName(name);
         student.setEmail(email);
 
