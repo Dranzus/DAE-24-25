@@ -55,3 +55,21 @@ Content-Type: application/json
     "subject": "Test",
     "body": "Hello World"
 }
+
+
+### REQUEST JWT TOKEN
+POST http://localhost:8080/academics/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{ "username": "admin", "password": "admin" }
+
+### GET ALL STUDENTS
+GET http://localhost:8080/academics/api/students
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczMjA1NDU3NCwiZXhwIjoxNzMyMDU4MTc0fQ.q1SwS2Y4pnke44eXqIkhDqzmDGjmGjh8D5czCxPUoBT9xpkXcPdi6sCIowKIql-E
+
+### TEST AUTH ENDPOINTS
+GET http://localhost:8080/academics/api/auth/user
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTczMjA1NDU3NCwiZXhwIjoxNzMyMDU4MTc0fQ.q1SwS2Y4pnke44eXqIkhDqzmDGjmGjh8D5czCxPUoBT9xpkXcPdi6sCIowKIql-E
