@@ -4,6 +4,11 @@ import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Startup;
+import pt.ipleiria.estg.dei.dae.academics.exceptions.MyConstraintViolationException;
+import pt.ipleiria.estg.dei.dae.academics.exceptions.MyEntityExistsException;
+import pt.ipleiria.estg.dei.dae.academics.exceptions.MyEntityNotFoundException;
+
+import java.util.logging.Logger;
 
 @Singleton
 @Startup
@@ -19,17 +24,24 @@ public class ConfigBean {
     @EJB
     private AdministratorBean administratorBean = new AdministratorBean();
 
+    private static final Logger logger = Logger.getLogger("ejbs.ConfigBean");
+
+
     @PostConstruct
-    public void populateDB(){
+    public void populateDB() throws MyEntityNotFoundException, MyEntityExistsException, MyConstraintViolationException {
         courseBean.create(1,"Desenvolvimento de Aplicações Empresariais");
         courseBean.create(2,"Desenvolvimento de Jogos Eletrónicos");
         courseBean.create(3,"Desenvolvimento de Sistemas de Software");
         subjectBean.create(1,"Programação I","1º",1,1);
         subjectBean.create(2,"Programação II","1º",1,1);
         subjectBean.create(3,"Programação III","2º",2,1);
-        studentBean.create("dranzus","1234","Joao Vieira","joao@mail.pt",1);
-        studentBean.create("carlos88","1234","Carlos Faria","carlos@mail.pt",2);
-        studentBean.create("rita99","1234","Rita Marques","rita@mail.pt",2);
+        try {
+            studentBean.create("dranzus", "1234", "Joao Vieira", "joao@mail.pt", 1);
+            studentBean.create("carlos88", "1234", "Carlos Faria", "carlos@mail.pt", 2);
+            studentBean.create("rita99", "1234", "Rita Marques", "rita@mail.pt", 2);
+        } catch (MyEntityExistsException e) {
+            logger.severe(e.getMessage());
+        }
         studentBean.enrollStudentInSubject("dranzus",1);
         studentBean.enrollStudentInSubject("dranzus",2);
         studentBean.enrollStudentInSubject("rita99",3);
